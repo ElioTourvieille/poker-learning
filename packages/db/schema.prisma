@@ -1,0 +1,128 @@
+generator client {
+  provider     = "prisma-client"
+  output       = "./generated"
+  moduleFormat = "cjs"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  createdAt DateTime @default(now())
+
+  concepts   Concept[]
+  notes      Note[]
+  flashcards Flashcard[]
+  hands      Hand[]
+  ranges     RangeCapture[]
+}
+
+model Concept {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  title     String
+  module    String?
+  summary   String?
+  createdAt DateTime @default(now())
+
+  notes      Note[]
+  flashcards Flashcard[]
+  handLinks  HandConceptLink[]
+  ranges     RangeCapture[]
+
+  @@index([userId])
+}
+
+model Note {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  conceptId String?
+  concept   Concept? @relation(fields: [conceptId], references: [id])
+  content   String
+  moduleRef String?
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([conceptId])
+}
+
+model Flashcard {
+  id         String   @id @default(cuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id])
+  conceptId  String?
+  concept    Concept? @relation(fields: [conceptId], references: [id])
+  question   String
+  answer     String
+  easeFactor Float    @default(2.5)
+  interval   Int      @default(0)
+  reps       Int      @default(0)
+  dueAt      DateTime @default(now())
+  createdAt  DateTime @default(now())
+
+  reviews ReviewLog[]
+
+  @@index([userId, dueAt])
+}
+
+model ReviewLog {
+  id          String    @id @default(cuid())
+  flashcardId String
+  flashcard   Flashcard @relation(fields: [flashcardId], references: [id])
+  quality     Int
+  userAnswer  String?
+  aiFeedback  String?
+  reviewedAt  DateTime  @default(now())
+}
+
+enum HandFormat {
+  LIVE
+  ONLINE
+}
+
+model Hand {
+  id        String     @id @default(cuid())
+  userId    String
+  user      User       @relation(fields: [userId], references: [id])
+  format    HandFormat
+  playedAt  DateTime
+  stakes    String?
+  position  String?
+  summary   String
+  result    String?
+  createdAt DateTime   @default(now())
+
+  conceptLinks HandConceptLink[]
+
+  @@index([userId, playedAt])
+}
+
+model HandConceptLink {
+  id        String  @id @default(cuid())
+  handId    String
+  hand      Hand    @relation(fields: [handId], references: [id])
+  conceptId String
+  concept   Concept @relation(fields: [conceptId], references: [id])
+  note      String?
+
+  @@unique([handId, conceptId])
+}
+
+model RangeCapture {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  conceptId String?
+  concept   Concept? @relation(fields: [conceptId], references: [id])
+  imagePath String
+  rangeText String?
+  situation String?
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+}
