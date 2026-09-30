@@ -1,0 +1,28 @@
+# dépendances
+node_modules/
+
+# builds
+dist/
+.next/
+out/
+*.tsbuildinfo
+
+# secrets
+.env
+.env.*
+!.env.example
+
+# logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# outils
+.DS_Store
+.vscode/
+.idea/
+coverage/
+graphify-out/
+
+# prisma
+packages/db/generated/
