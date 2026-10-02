@@ -1,8 +1,9 @@
+import { resolve } from "node:path";
 import { config } from "dotenv";
 import { defineConfig } from "prisma/config";
 
-// .env unique à la racine du monorepo
-config({ path: "../../.env", quiet: true });
+// .env unique à la racine du monorepo, quel que soit le dossier courant
+config({ path: resolve(__dirname, "../../.env"), quiet: true });
 
 export default defineConfig({
   schema: "schema.prisma",

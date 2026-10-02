@@ -11,11 +11,11 @@ Outil personnel de suivi de formation poker (Masterclass Kill Tilt) et de mains 
 ## Démarrage
 
 ```
-cp .env.example .env   # renseigner DATABASE_URL et ANTHROPIC_API_KEY
+cp .env.example .env   # renseigner DATABASE_URL, DIRECT_URL (Neon, sans -pooler) et ANTHROPIC_API_KEY
 pnpm install
-pnpm db:generate
+pnpm build             # construit @poker-lab/db avant api et web
 pnpm dev:api           # http://localhost:3001
 pnpm dev:web           # http://localhost:3000
 ```
 
-Première migration, une fois `DATABASE_URL` renseignée : `pnpm db:migrate --name init`.
+Nouvelle migration après un changement de schéma : `pnpm db:migrate --name <nom>` (utilise `DIRECT_URL`).

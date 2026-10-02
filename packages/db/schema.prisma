@@ -18,6 +18,9 @@ model User {
   flashcards Flashcard[]
   hands      Hand[]
   ranges     RangeCapture[]
+
+  reviewLogs       ReviewLog[]
+  handConceptLinks HandConceptLink[]
 }
 
 model Concept {
@@ -72,12 +75,17 @@ model Flashcard {
 
 model ReviewLog {
   id          String    @id @default(cuid())
+  userId      String
+  user        User      @relation(fields: [userId], references: [id])
   flashcardId String
   flashcard   Flashcard @relation(fields: [flashcardId], references: [id])
   quality     Int
   userAnswer  String?
   aiFeedback  String?
   reviewedAt  DateTime  @default(now())
+
+  @@index([userId])
+  @@index([flashcardId])
 }
 
 enum HandFormat {
@@ -104,6 +112,8 @@ model Hand {
 
 model HandConceptLink {
   id        String  @id @default(cuid())
+  userId    String
+  user      User    @relation(fields: [userId], references: [id])
   handId    String
   hand      Hand    @relation(fields: [handId], references: [id])
   conceptId String
@@ -111,6 +121,7 @@ model HandConceptLink {
   note      String?
 
   @@unique([handId, conceptId])
+  @@index([userId])
 }
 
 model RangeCapture {

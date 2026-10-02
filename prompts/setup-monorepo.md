@@ -17,7 +17,7 @@ Poser le socle du projet : monorepo pnpm avec `apps/api` (NestJS), `apps/web` (N
 6. `apps/api` : `nest new` avec pnpm, `--skip-git`. Aucun module métier créé.
 7. `.env` à la racine (gitignoré), `.env.example` versionné avec `DATABASE_URL` et `ANTHROPIC_API_KEY` vides.
 8. `.claude/agents/` (sous-agents Origin Studio) est absent du repo. Je ne l'invente pas : à récupérer depuis le template Git Origin Studio.
-9. `prisma migrate dev --name init` n'est PAS exécuté tant que `DATABASE_URL` n'est pas fournie par l'utilisateur.
+9. `prisma migrate dev --name init` n'est PAS exécuté tant que `DATABASE_URL` n'est pas fournie par l'utilisateur. **Mise à jour** : l'URL Neon a été fournie, la migration `init` a été appliquée, puis `add_user_id_scoping` (décision A de l'utilisateur après revue : `userId` ajouté à `ReviewLog` et `HandConceptLink`, pour respecter le scoping systématique d'AGENTS.md ; écart assumé par rapport à la spec). Les migrations passent par `DIRECT_URL` (URL Neon sans pooler).
 10. La création du dépôt GitHub est une action externe : faite uniquement sur confirmation explicite (nom + visibilité).
 
 ## Fichiers à créer/modifier
@@ -40,9 +40,7 @@ Poser le socle du projet : monorepo pnpm avec `apps/api` (NestJS), `apps/web` (N
 ## Comment tester
 ```
 pnpm install
-pnpm db:generate
-pnpm --filter api build
-pnpm --filter web build
+pnpm build   # ordre topologique : @poker-lab/db avant api et web (dist/ et generated/ sont gitignorés)
 pnpm dev:api   # http://localhost:3001 (port différent du web)
 pnpm dev:web   # http://localhost:3000
 ```
