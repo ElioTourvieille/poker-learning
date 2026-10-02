@@ -22,7 +22,8 @@ Traiter les points reportés des revues de la PR #1 : vulnérabilités de dépen
 - `apps/api/package.json`, `pnpm-lock.yaml` (montée Nest, ajout `@nestjs/config`)
 - `apps/api/src/app.module.ts` (import de `ConfigModule`)
 - `packages/db/prisma.config.ts` (échec explicite pour `migrate`)
-- `package.json` racine : `pnpm.overrides` uniquement si hypothèse 2 appliquée
+- `packages/db/tsconfig.json` (hypothèse 7)
+- `pnpm-workspace.yaml` : `overrides` bornés (`^`) pour `mysql2` et `deepmerge-ts` (hypothèse 8)
 - `prompts/fix-deps-config.md` (ce fichier)
 
 ## Critères d'acceptation

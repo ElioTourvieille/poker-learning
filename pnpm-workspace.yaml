@@ -2,9 +2,11 @@ packages:
   - "apps/*"
   - "packages/*"
 
+# Correctifs d'audit sur des dépendances internes du CLI Prisma (mysql2 inutilisé avec Postgres).
+# À retirer quand Prisma aura mis à jour ces dépendances (pnpm audit --prod le dira).
 overrides:
-  mysql2: ">=3.23.1"
-  deepmerge-ts: ">=8.0.0"
+  mysql2: "^3.23.1"
+  deepmerge-ts: "^8.0.2"
 
 ignoredBuiltDependencies:
   - sharp
