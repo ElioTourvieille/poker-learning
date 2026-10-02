@@ -15,6 +15,8 @@ Traiter les points reportés des revues de la PR #1 : vulnérabilités de dépen
 4. `prisma.config.ts` : si `DIRECT_URL` et `DATABASE_URL` sont absentes, `prisma migrate` échoue avec un message français explicite ; `prisma generate` reste utilisable sans URL (le repli est conservé pour `generate` uniquement, via détection de la commande).
 5. Chargement du `.env` côté API : `@nestjs/config` avec `envFilePath` pointant vers le `.env` de la racine, sans valider de variable métier à ce stade (la validation viendra avec le premier module qui les lit).
 6. Hors scope : `ValidationPipe`, CORS, helmet (à ajouter avec le premier endpoint), tout module métier.
+7. **Ajouté après validation** : l'avertissement TypeScript « moduleResolution=node10 is deprecated » vient de `packages/db/tsconfig.json`. Correction par `module`/`moduleResolution: node16` plutôt que `ignoreDeprecations`, qui ne ferait que masquer l'erreur avant TypeScript 7.
+8. **Résultat de la montée** : Nest 11.2.7 sans casse du scaffold, donc pas de repli sur les overrides pour Nest. Il reste des vulnérabilités en prod dans les dépendances internes du CLI Prisma (`mysql2`, `deepmerge-ts`) : corrigées par `overrides` dans `pnpm-workspace.yaml` (mysql2 inutilisé, base Postgres).
 
 ## Fichiers à créer/modifier
 - `apps/api/package.json`, `pnpm-lock.yaml` (montée Nest, ajout `@nestjs/config`)
